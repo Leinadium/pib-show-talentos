@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>puc-show-talentos</title>
+</head>
+
+<style>
+    body {
+        background-color: gray;
+    }
+
+    div {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        overflow: auto;
+
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+    }
+
+    button {
+        padding: 10px;
+        text-align: center;
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
+    }
+
+    .eliminar {
+        width: 500px;
+        height: 500px;
+        background-color: red;
+        border: 10px solid darkred;
+        border-radius: 50%;
+    }
+
+    .reset {
+        width: 100px;
+        background-color: lightblue;
+        border: 2px solid darkblue;
+        border-radius: 10%;
+    }
+
+    .pressed {
+        background-color: darkgray !important;
+    }
+
+</style>
+
+<body>
+    <div>
+        <span>
+            <b>Eliminações:
+                <span id="texto">
+                    {{ eliminados }}
+                </span>
+            </b>
+        </span>
+        {% if not pressed %}
+        <button class="eliminar" onclick="x()">Eliminar</button>
+        {% else %}
+        <button class="eliminar pressed">Eliminado</button>
+        {% endif %}
+        <button class="reset" onclick="reset()">
+            Reset
+        </button>
+    </div>
+    <script>
+    function x() {window.location = "/x";}
+    function reset() {window.location = "/reset";}
+
+    function loop() {
+        const pressionado = {% if pressed %} true {% else %} false {% endif %};
+        let tag_texto = document.getElementById('texto')
+        let xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    let data = JSON.parse(xhr.responseText);
+                    if (pressionado && data.contador === 0) { window.location = '/' }
+                    tag_texto.innerText = data.contador;
+                }
+            }
+        }
+        xhr.open("GET", '/update', true);
+        xhr.send();
+
+        setTimeout(loop, 1000);
+    }
+
+
+
+</script>
+    <script>
+        (function() {loop();})();
+    </script>
+</body>
+
+</html>
