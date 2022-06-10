@@ -1,9 +1,8 @@
 import pygame
-from sys import exit
 from threading import Thread
 
-from constants import *
-from conexao import Conexao
+from .constants import *
+from .conexao import Conexao
 
 from typing import List
 
@@ -58,7 +57,10 @@ class View:
 
     def blink_mark(self, ident=-1):
         print("blink!", ident)
-        marcas = [self.marcacoes[ident]] if ident != -1 else self.marcacoes
+        try:
+            marcas = [self.marcacoes[ident]] if ident != -1 else self.marcacoes
+        except IndexError:
+            return      # ignora erros
         for m in marcas:
             m.aceso = not m.aceso
 
@@ -137,8 +139,10 @@ class View:
 
         pygame.display.flip()
 
-    def loop(self):
+    def server_start(self):
         self.conexao_thread.start()
+
+    def loop(self):
         self.clock.tick(30)
 
         self.running = True
@@ -147,4 +151,5 @@ class View:
             self.draw()
 
         pygame.quit()
-        exit(0)
+        # exit(0)
+        return

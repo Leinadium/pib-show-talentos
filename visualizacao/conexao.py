@@ -1,7 +1,7 @@
 import socket
 from threading import Thread
 
-from constants import Mensagem
+from .constants import Mensagem
 from typing import Callable
 
 

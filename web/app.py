@@ -1,7 +1,9 @@
+import os
+import signal
 from flask import Flask, render_template, redirect
 from threading import Lock
 
-from conexao import Conexao
+from .conexao import Conexao
 
 from typing import Optional
 
@@ -14,7 +16,8 @@ class Contador:
     conexao: Optional[Conexao] = None
 
     @classmethod
-    def start(cls):
+    def start(cls, host, port):
+        Conexao.config(host, port)
         cls.conexao = Conexao()
 
     @classmethod
@@ -60,7 +63,12 @@ def reset():
     return redirect('/')
 
 
+@app.route('/end')
+def end():
+    os.kill(os.getpid(), signal.SIGINT)     # se fecha
+    return 'shutting down'
+
+
 if __name__ == "__main__":
-    Conexao.config('localhost', 4474)
-    Contador.start()
+    Contador.start('localhost', 4474)
     app.run(host='0.0.0.0', port=5000, debug=False)
