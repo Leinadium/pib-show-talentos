@@ -17,7 +17,14 @@ if __name__ == "__main__":
 
     # iniciando flask
     Contador.start(host_client, port)
-    thread_flask = Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': flask_port, 'debug': False})
+    thread_flask = Thread(
+        target=app.run,
+        kwargs={
+            'host': '0.0.0.0',
+            'port': flask_port,
+            'debug': False
+        }
+    )
     thread_flask.start()
 
     # loop pygame
