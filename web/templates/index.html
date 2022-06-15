@@ -10,7 +10,7 @@
         background-color: gray;
     }
 
-    div {
+    div.main {
         position: fixed;
         top: 0;
         left: 0;
@@ -28,32 +28,44 @@
     button {
         padding: 10px;
         text-align: center;
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
+        background-color: transparent;
+        border: none;
+        display: flex;
     }
 
-    .eliminar {
-        width: 700px;
-        height: 700px;
-        background-color: red;
-        border: 10px solid darkred;
-        border-radius: 50%;
+    img {
+        width: 120%;
+        height: auto;
+        align-items: center;
     }
 
     .reset {
         width: 100px;
+        text-align: center;
         background-color: lightblue;
         border: 2px solid darkblue;
         border-radius: 10%;
     }
 
-    .pressed {
-        background-color: darkgray !important;
+    .botoes {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px
+    }
+
+    .jingle {
+        text-align: center;
+        background-color: lightgreen;
+        border: 2px solid darkgreen;
+        border-radius: 10%
     }
 
 </style>
 
 <body>
-    <div>
+    <div class="main">
         <span>
             <b>Eliminações:
                 <span id="texto">
@@ -62,17 +74,31 @@
             </b>
         </span>
         {% if not pressed %}
-        <button class="eliminar" onclick="x()">Eliminar</button>
-        {% else %}
-        <button class="eliminar pressed">Eliminado</button>
-        {% endif %}
-        <button class="reset" onclick="reset()">
-            Reset
+        <button onclick="x()">
+            <!-- Eliminar -->
+            <img src="/static/botao1.png" alt="Eliminar" />
         </button>
+        {% else %}
+        <button class="">
+            <!-- Eliminado -->
+            <img src="/static/botao2.png" alt="Eliminar" />
+        </button>
+        {% endif %}
+        <div class="botoes">
+            <button class="reset" onclick="reset()">Reset</button>
+            <button class="jingle" onclick="jingle(1)">Jingle1</button>
+            <button class="jingle" onclick="jingle(2)">Jingle2</button>
+        </div>
     </div>
     <script>
     function x() {window.location = "/x";}
     function reset() {window.location = "/reset";}
+
+    function jingle(x) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", '/jingle/' + x);
+        xhr.send();
+    }
 
     function loop() {
         const pressionado = {% if pressed %} true {% else %} false {% endif %};
