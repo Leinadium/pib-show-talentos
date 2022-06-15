@@ -6,6 +6,8 @@ class Mensagem(Enum):
     ELIMINACAO = 1
     RESET = 2
     EXIT = 3
+    JINGLE1 = 4
+    JINGLE2 = 5
 
 
 BLACK = 0, 0, 0
@@ -16,5 +18,5 @@ PORT = 4474
 HOST = '0.0.0.0'
 
 
-DIRETORIO_IMAGEMS = path.join(path.abspath(__file__), '..', 'imagem')
+DIRETORIO_ASSETS = path.join(path.abspath(__file__), '..', 'assets')
 

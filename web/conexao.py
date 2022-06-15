@@ -30,5 +30,9 @@ class Conexao:
         self._send('r')
         return
 
+    def enviar_jingle(self, x):
+        print("Enviando jingle")
+        self._send(f'j{x}')
+
     def fechar(self):
         self.sock.close()

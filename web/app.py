@@ -38,6 +38,12 @@ class Contador:
     def get(cls) -> int:
         return cls.q
 
+    @classmethod
+    def jingle(cls, x: int):
+        # meio feio ficar aqui no Contador, mas é onde tem a conexao
+        cls.conexao.enviar_jingle(x)
+        return
+
 
 @app.route('/')
 def index():
@@ -57,10 +63,16 @@ def update():
 
 @app.route('/reset')
 def reset():
-    if Contador.get() > 0:
-        Contador.reset()
+    # sempre reseta, para tbm parar os sons caso estejam tocando
+    Contador.reset()
 
     return redirect('/')
+
+
+@app.route('/jingle/<int:x>')
+def jingle(x: int):
+    Contador.jingle(x)
+    return ':D'
 
 
 @app.route('/end')

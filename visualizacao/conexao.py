@@ -32,6 +32,11 @@ class Conexao:
                 conn.shutdown(socket.SHUT_RDWR)
                 return
 
+            elif data_str.startswith('j'):
+                self.callback(
+                    Mensagem.JINGLE1 if '1' in data_str else Mensagem.JINGLE2
+                )
+
             data: bytes = conn.recv(1024)
 
         self.callback(Mensagem.EXIT)
