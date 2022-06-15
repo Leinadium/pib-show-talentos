@@ -4,7 +4,7 @@ from threading import Thread
 from .constants import *
 from .conexao import Conexao
 
-from typing import List
+from typing import List, Optional
 
 
 class Marcacao:
@@ -22,6 +22,7 @@ class Marcacao:
 class View:
     def __init__(self, quantidade_x: int):
         pygame.init()
+        pygame.mixer.init()
 
         self.running = False
 
@@ -33,7 +34,25 @@ class View:
         self.marcacoes: List[Marcacao] = list()
         self.quantidade: int = quantidade_x
 
-        self.imagem = pygame.image.load(path.join(DIRETORIO_IMAGEMS, 'x.png'))
+        self.imagem_original = pygame.image.load(path.join(DIRETORIO_ASSETS, 'x_2.png'))
+        self.imagem = self.imagem_original  # vai ser sobreescrita
+
+        self.fundo_original = pygame.image.load(path.join(DIRETORIO_ASSETS, 'fundo_branco.jpg'))
+        self.fundo = self.fundo_original
+
+        self.som_erro = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'erro.wav'))
+        self.som_erro.set_volume(0.7)
+
+        self.som_eliminacao = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'eliminacao.wav'))
+        self.som_eliminacao.set_volume(0.5)
+
+        # self.som_jingle1 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'jingle1.wav'))
+        # self.som_jingle2 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'jingle2.wav'))
+        # enquanto nao tem os jingles, vai ser o erro
+        self.som_jingle1 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'erro.wav'))
+        self.som_jingle2 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'eliminacao.wav'))
+        self.channel_jingle1: Optional[pygame.mixer.Channel] = None
+        self.channel_jingle2: Optional[pygame.mixer.Channel] = None
 
         self.comprimento_marcacao = -1
         self.altura_marcacao = -1
@@ -52,11 +71,17 @@ class View:
         self.altura_marcacao = self.comprimento_marcacao    # para ficar quadrado
 
         self.imagem = pygame.transform.scale(
-            self.imagem, (self.comprimento_marcacao, self.altura_marcacao)
+            self.imagem_original, (self.comprimento_marcacao, self.altura_marcacao)
+        )
+
+        comp = int(self.comprimento * 0.6)
+        alt = int(self.altura * 0.6)
+        self.fundo = pygame.transform.scale(
+            self.fundo_original, (comp, alt)
         )
 
     def blink_mark(self, ident=-1):
-        print("blink!", ident)
+        # print("blink!", ident)
         try:
             marcas = [self.marcacoes[ident]] if ident != -1 else self.marcacoes
         except IndexError:
@@ -75,15 +100,31 @@ class View:
             pygame.time.set_timer(
                 pygame.event.Event(
                     tipo,
-                    ident=ident
+                    ident=ident,
                 ),
                 millis=250,
                 loops=6
             )
             self.marcacoes.append(Marcacao())
 
+            # tocando som
+            if len(self.marcacoes) == self.quantidade:
+                # eliminado
+                self.som_eliminacao.play(fade_ms=500)
+            else:
+                self.som_erro.play(fade_ms=100)
+
         elif msg == Mensagem.RESET:
             self.marcacoes.clear()
+            pygame.mixer.stop()
+
+        elif msg == Mensagem.JINGLE1:
+            if not (self.channel_jingle2 is not None and self.channel_jingle2.get_busy()):
+                self.channel_jingle1 = self.som_jingle1.play(fade_ms=100)
+
+        elif msg == Mensagem.JINGLE2:
+            if not (self.channel_jingle1 is not None and self.channel_jingle1.get_busy()):
+                self.channel_jingle2 = self.som_jingle2.play(fade_ms=100)
 
         elif msg == Mensagem.EXIT:
             self.exit()
@@ -97,9 +138,15 @@ class View:
             if event.type == pygame.QUIT:
                 self.exit()
 
-            # ignora clique
+            # ignora clique de mouse
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pass
+
+            # botao de emergencia
+            elif event.type == pygame.KEYDOWN:
+                if hasattr(event, 'key') and event.key == pygame.K_SPACE:
+                    pygame.mixer.stop()
+                    self.marcacoes.clear()
 
             # mudar tamanho da tela
             elif event.type == pygame.VIDEORESIZE:
@@ -116,7 +163,18 @@ class View:
                     self.blink_mark(ident=event.ident)
 
     def draw(self):
-        self.tela.fill(BLACK)
+        self.tela.fill(WHITE)
+
+        # projetando o background
+        fundo_rect = self.fundo.get_rect()
+        self.tela.blit(
+            self.fundo, (
+                (self.comprimento - fundo_rect.w) // 2,
+                (self.altura - fundo_rect.h) // 2
+            )
+        )
+
+        # projetando os X
         for i, m in enumerate(self.marcacoes):
 
             if m.aceso:
@@ -125,17 +183,6 @@ class View:
                 rect.y = (self.altura - self.altura_marcacao) // 2
 
                 self.tela.blit(self.imagem, rect)
-
-            # self.tela.blit
-            # pygame.draw.rect(
-            #     surface=self.tela,
-            #     color=RED if m.aceso else WHITE,
-            #     rect=(
-            #         self.comprimento_marcacao * (i + 0.5),
-            #         (self.altura - self.altura_marcacao) // 2,
-            #         self.comprimento_marcacao, self.altura_marcacao
-            #     ),
-            # )
 
         pygame.display.flip()
 
