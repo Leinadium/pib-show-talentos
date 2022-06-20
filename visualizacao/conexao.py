@@ -1,5 +1,4 @@
 import socket
-from threading import Thread
 
 from .constants import Mensagem
 from typing import Callable
@@ -37,6 +36,9 @@ class Conexao:
                     Mensagem.JINGLE1 if '1' in data_str else Mensagem.JINGLE2
                 )
 
+            elif data_str.startswith('c'):
+                self.callback(Mensagem.COUNTDOWN)
+
             data: bytes = conn.recv(1024)
 
         self.callback(Mensagem.EXIT)
@@ -53,4 +55,3 @@ class Conexao:
         conn, addr = self.socket.accept()
         print("Recebi conexao", conn, addr)
         self.client_handler(conn)
-

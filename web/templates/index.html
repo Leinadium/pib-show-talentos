@@ -55,11 +55,15 @@
         gap: 10px
     }
 
-    .jingle {
+    .jingle, .countdown {
         text-align: center;
         background-color: lightgreen;
         border: 2px solid darkgreen;
         border-radius: 10%
+    }
+    .countdown {
+        background-color: lightyellow !important;
+        border: 2px solid darkgoldenrod !important;
     }
 
 </style>
@@ -85,6 +89,7 @@
         </button>
         {% endif %}
         <div class="botoes">
+            <button class="countdown" onclick="countdown()">Countdown</button>
             <button class="reset" onclick="reset()">Reset</button>
             <button class="jingle" onclick="jingle(1)">Jingle1</button>
             <button class="jingle" onclick="jingle(2)">Jingle2</button>
@@ -97,6 +102,12 @@
     function jingle(x) {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", '/jingle/' + x);
+        xhr.send();
+    }
+
+    function countdown() {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", '/countdown');
         xhr.send();
     }
 

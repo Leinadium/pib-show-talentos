@@ -12,7 +12,7 @@ if __name__ == "__main__":
     flask_port = 5000
 
     # preparando pygame
-    view = View(3)
+    view = View(4, 60 * 3)
     view.server_start()
 
     # iniciando flask

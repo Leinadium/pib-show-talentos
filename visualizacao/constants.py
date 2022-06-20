@@ -8,6 +8,7 @@ class Mensagem(Enum):
     EXIT = 3
     JINGLE1 = 4
     JINGLE2 = 5
+    COUNTDOWN = 6
 
 
 BLACK = 0, 0, 0

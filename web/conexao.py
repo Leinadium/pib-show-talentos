@@ -17,7 +17,6 @@ class Conexao:
 
     def _send(self, msg: str):
         q = self.sock.send(f'{msg}\n'.encode('utf-8'))
-        print(f'enviado {q} bytes')
         return
 
     def enviar_eliminacao(self):
@@ -33,6 +32,10 @@ class Conexao:
     def enviar_jingle(self, x):
         print("Enviando jingle")
         self._send(f'j{x}')
+
+    def enviar_countdown(self):
+        print("Enviando countdown")
+        self._send('c')
 
     def fechar(self):
         self.sock.close()

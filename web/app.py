@@ -44,6 +44,12 @@ class Contador:
         cls.conexao.enviar_jingle(x)
         return
 
+    @classmethod
+    def countdown(cls):
+        # mesma coisa feia do metodo acima...
+        cls.conexao.enviar_countdown()
+        return
+
 
 @app.route('/')
 def index():
@@ -73,6 +79,12 @@ def reset():
 def jingle(x: int):
     Contador.jingle(x)
     return ':D'
+
+
+@app.route('/countdown')
+def countdown():
+    Contador.countdown()
+    return ':DD'
 
 
 @app.route('/end')
