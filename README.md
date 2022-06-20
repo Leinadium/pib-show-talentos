@@ -3,7 +3,7 @@
 Esse é o repositório do código do projeto de simulação do *The Voice Brasil*
 para o evento de Show de Talentos do acampamento de 2022 da PIB do Recreio.
 
-![](.\docs\imagem-readme.md.png)
+![](docs/imagem-readme.md.png)
 
 O projeto consiste de uma página web para ser visualizada em um celular, 
 que possui um botão para eliminação e outros botões para controle, além
