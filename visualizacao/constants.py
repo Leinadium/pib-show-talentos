@@ -18,6 +18,4 @@ RED = 255, 0, 0
 PORT = 4474
 HOST = '0.0.0.0'
 
-
-DIRETORIO_ASSETS = path.join(path.abspath(__file__), '..', 'assets')
-
+DIRETORIO_ASSETS = path.join(path.dirname(path.abspath(__file__)), 'assets')
