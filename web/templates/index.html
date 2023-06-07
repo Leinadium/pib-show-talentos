@@ -22,11 +22,11 @@
         flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
-        gap: 50px;
+        gap: 10vh;
     }
 
     button {
-        padding: 10px;
+        padding: 1vh;
         text-align: center;
         background-color: transparent;
         border: none;
@@ -34,37 +34,53 @@
     }
 
     img {
-        width: 120%;
-        height: auto;
+        width: 80vw;
+        aspect-ratio: 1 / 1;
         align-items: center;
     }
 
-    .reset {
-        width: 100px;
+    .countdown, .reset, .jingle {
+        width: 20vw;
+        height: 8vh;
         text-align: center;
+        border-radius: 1vh;
+    }
+
+    .countdown, .reset {
+        width: 40vw;
+    }
+
+    .jingle {
+        background-color: lightgreen;
+        border: 1vh solid darkgreen;
+    }
+    .countdown {
+        background-color: lightyellow;
+        border: 1vh solid darkgoldenrod;
+    }
+
+    .reset {
         background-color: lightblue;
-        border: 2px solid darkblue;
-        border-radius: 10%;
+        border: 1vh solid darkblue;
     }
 
     .botoes {
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
-        gap: 10px
+        gap: 3vh
     }
 
-    .jingle, .countdown {
-        text-align: center;
-        background-color: lightgreen;
-        border: 2px solid darkgreen;
-        border-radius: 10%
+    .row-botoes {
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        align-items: center;
+        gap: 3vw;
     }
-    .countdown {
-        background-color: lightyellow !important;
-        border: 2px solid darkgoldenrod !important;
-    }
+
 
 </style>
 
@@ -89,12 +105,17 @@
         </button>
         {% endif %}
         <div class="botoes">
-            <button class="countdown" onclick="countdown()">Countdown</button>
-            <button class="reset" onclick="reset()">Reset</button>
-            <button class="jingle" onclick="jingle(1)">Jingle1</button>
-            <button class="jingle" onclick="jingle(2)">Jingle2</button>
+            <div class="row-botoes">
+                <button class="countdown" onclick="countdown()">Countdown</button>
+                <button class="reset" onclick="reset()">Reset</button>
+            </div>
+            <div class="row-botoes">
+                <button class="jingle" onclick="jingle(1)">Jingle1</button>
+                <button class="jingle" onclick="jingle(2)">Jingle2</button>
+            </div>
         </div>
     </div>
+
     <script>
     function x() {window.location = "/x";}
     function reset() {window.location = "/reset";}
@@ -130,12 +151,9 @@
         setTimeout(loop, 1000);
     }
 
-
-
-</script>
-    <script>
-        (function() {loop();})();
+    loop();
     </script>
+
 </body>
 
 </html>
