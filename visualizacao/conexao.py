@@ -32,9 +32,19 @@ class Conexao:
                 return
 
             elif data_str.startswith('j'):
-                self.callback(
-                    Mensagem.JINGLE1 if '1' in data_str else Mensagem.JINGLE2
-                )
+                x = data_str[1]
+                if x == '1':
+                    self.callback(Mensagem.JINGLE1)
+                elif x == '2':
+                    self.callback(Mensagem.JINGLE2)
+                elif x == '3':
+                    self.callback(Mensagem.JINGLE3)
+                elif x == '4':
+                    self.callback(Mensagem.JINGLE4)
+                elif x == '5':
+                    self.callback(Mensagem.JINGLE5)
+                elif x == '6':
+                    self.callback(Mensagem.JINGLE6)
 
             elif data_str.startswith('c'):
                 self.callback(Mensagem.COUNTDOWN)

@@ -53,8 +53,17 @@ class View:
         # enquanto nao tem os jingles, vai ser o erro
         self.som_jingle1 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'risadas.wav'))
         self.som_jingle2 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'ui.wav'))
+        self.som_jingle3 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'cavalo.wav'))
+        self.som_jingle4 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'ele-gosta.wav'))
+        self.som_jingle5 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'rapaz.wav'))
+        self.som_jingle6 = pygame.mixer.Sound(path.join(DIRETORIO_ASSETS, 'dilicia.wav'))
+
         self.channel_jingle1: Optional[pygame.mixer.Channel] = None
         self.channel_jingle2: Optional[pygame.mixer.Channel] = None
+        self.channel_jingle3: Optional[pygame.mixer.Channel] = None
+        self.channel_jingle4: Optional[pygame.mixer.Channel] = None
+        self.channel_jingle5: Optional[pygame.mixer.Channel] = None
+        self.channel_jingle6: Optional[pygame.mixer.Channel] = None
 
         self.comprimento_marcacao = -1
         self.altura_marcacao = -1
@@ -109,6 +118,18 @@ class View:
         rect.y = self.altura // 10 * 8
 
         self.tela.blit(surface, rect)
+    
+    def check_busy(self):
+        busies = [
+            not (self.channel_jingle1 is not None and self.channel_jingle1.get_busy()),
+            not (self.channel_jingle2 is not None and self.channel_jingle2.get_busy()),
+            not (self.channel_jingle3 is not None and self.channel_jingle3.get_busy()),
+            not (self.channel_jingle4 is not None and self.channel_jingle4.get_busy()),
+            not (self.channel_jingle5 is not None and self.channel_jingle5.get_busy()),
+            not (self.channel_jingle6 is not None and self.channel_jingle6.get_busy()),
+        ]
+        return any(busies)
+        
 
     def receive_message(self, msg: Mensagem):
         if msg == Mensagem.ELIMINACAO:
@@ -141,13 +162,29 @@ class View:
             pygame.time.set_timer(pygame.event.Event(self.evento_timer), millis=0)
 
         elif msg == Mensagem.JINGLE1:
-            if not (self.channel_jingle2 is not None and self.channel_jingle2.get_busy()):
-                self.channel_jingle1 = self.som_jingle1.play(fade_ms=100)
+            # if not (self.channel_jingle1 is not None and self.channel_jingle1.get_busy()):
+            self.channel_jingle1 = self.som_jingle1.play(fade_ms=100)
 
         elif msg == Mensagem.JINGLE2:
-            if not (self.channel_jingle1 is not None and self.channel_jingle1.get_busy()):
-                self.channel_jingle2 = self.som_jingle2.play(fade_ms=100)
-
+            # if not (self.channel_jingle2 is not None and self.channel_jingle2.get_busy()):
+            self.channel_jingle2 = self.som_jingle2.play(fade_ms=100)
+        
+        elif msg == Mensagem.JINGLE3:
+            # if not (self.channel_jingle3 is not None and self.channel_jingle3.get_busy()):
+            self.channel_jingle3 = self.som_jingle3.play(fade_ms=100)
+        
+        elif msg == Mensagem.JINGLE4:
+            # if not (self.channel_jingle4 is not None and self.channel_jingle4.get_busy()):
+            self.channel_jingle4 = self.som_jingle4.play(fade_ms=100)
+        
+        elif msg == Mensagem.JINGLE5:
+            # if not (self.channel_jingle5 is not None and self.channel_jingle5.get_busy()):
+            self.channel_jingle5 = self.som_jingle5.play(fade_ms=100)
+        
+        elif msg == Mensagem.JINGLE6:
+            # if not (self.channel_jingle6 is not None and self.channel_jingle6.get_busy()):
+            self.channel_jingle6 = self.som_jingle6.play(fade_ms=100)
+                
         elif msg == Mensagem.COUNTDOWN:
             # zerando countdown
             self.countdown_timer = self.countdown_max
